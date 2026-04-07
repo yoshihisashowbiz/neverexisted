@@ -231,6 +231,24 @@ body {
   font-family: 'EB Garamond', serif;
   max-width: 560px;
   letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+}
+
+.s-line {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  display: block;
+}
+
+.s-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.s-gap {
+  margin-top: 1.6em;
 }
 
 /* ── DIVIDER ── */
@@ -479,16 +497,16 @@ body {
 <!-- STATEMENT -->
 <section class="statement">
   <p class="statement-text">
-    都市は、記録されるたびに死んでいく。<br>
-    風景は情報となり、網膜を滑り落ち、消える。<br>
-    その後に、何かが残る。<br><br>
-    誰かが、どこかに残した名もなき痕跡。<br>
-    それを都市の皮膚から蒸留し、<br>
-    物質として再構成する。<br><br>
-    この都市は、存在しなかった。<br>
-    しかし、そこに遺物がある。<br>
-    それは「今」ではない。<br>
-    どこにもなかった場所から届いた、遠い断片である。
+    <span class="s-line" data-delay="0">都市は、記録されるたびに死んでいく。</span>
+    <span class="s-line" data-delay="400">風景は情報となり、網膜を滑り落ち、消える。</span>
+    <span class="s-line s-gap" data-delay="1800">その後に、何かが残る。</span>
+    <span class="s-line s-gap" data-delay="3200">誰かが、どこかに残した名もなき痕跡。</span>
+    <span class="s-line" data-delay="3800">それを都市の皮膚から蒸留し、</span>
+    <span class="s-line s-gap" data-delay="4400">物質として再構成する。</span>
+    <span class="s-line s-gap" data-delay="6000">この都市は、存在しなかった。</span>
+    <span class="s-line" data-delay="6800">しかし、そこに遺物がある。</span>
+    <span class="s-line" data-delay="7600">それは「今」ではない。</span>
+    <span class="s-line" data-delay="8400">どこにもなかった場所から届いた、遠い断片である。</span>
   </p>
 </section>
 
@@ -571,16 +589,22 @@ body {
 </body>
 <script>
 const statement = document.querySelector('.statement');
+const lines = document.querySelectorAll('.s-line');
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      setTimeout(() => {
-        statement.classList.add('visible');
-      }, 300);
+      lines.forEach(line => {
+        const delay = parseInt(line.dataset.delay) || 0;
+        setTimeout(() => {
+          line.classList.add('visible');
+        }, delay);
+      });
       observer.unobserve(statement);
     }
   });
-}, { threshold: 0.3 });
+}, { threshold: 0.2 });
+
 observer.observe(statement);
 </script>
 </html>
