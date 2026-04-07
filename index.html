@@ -214,14 +214,6 @@ body {
   align-items: center;
   justify-content: center;
   padding: clamp(48px, 7vw, 96px);
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 1.6s ease, transform 1.6s ease;
-}
-
-.statement.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .statement-text {
@@ -588,27 +580,30 @@ body {
 
 </body>
 <script>
+function triggerStatement() {
+  var lines = document.querySelectorAll('.s-line');
+  lines.forEach(function(line) {
+    var delay = parseInt(line.getAttribute('data-delay')) || 0;
+    setTimeout(function() {
+      line.classList.add('visible');
+    }, delay);
+  });
+}
+
 var triggered = false;
 
-function checkStatement() {
+function onScroll() {
   if (triggered) return;
   var el = document.querySelector('.statement');
   if (!el) return;
   var rect = el.getBoundingClientRect();
-  if (rect.top < window.innerHeight) {
+  if (rect.top < window.innerHeight + 100) {
     triggered = true;
-    var lines = document.querySelectorAll('.s-line');
-    lines.forEach(function(line) {
-      var delay = parseInt(line.getAttribute('data-delay')) || 0;
-      setTimeout(function() {
-        line.classList.add('visible');
-      }, delay);
-    });
+    triggerStatement();
   }
 }
 
-window.addEventListener('scroll', checkStatement);
-window.addEventListener('load', checkStatement);
-checkStatement();
+window.addEventListener('scroll', onScroll, { passive: true });
+setTimeout(onScroll, 500);
 </script>
 </html>
